@@ -25,17 +25,16 @@ run "cargo build" to start
 run "cargo convert" to read the data.csv and convert it into zg105.db
 ![](convert.png)
 
-# crud
 run "cargo run query [lines]" to do query
 
-read
+# read
 ![](read.png)
 
-insert
+# insert
 ![](insert.png)
 
-delete
+# delete
 ![](delete.png)
 
-update
+# update
 ![](update.png)
