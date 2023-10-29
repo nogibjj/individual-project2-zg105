@@ -3,10 +3,11 @@ name = "zg105"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-csv = "1.1"
-statrs = "0.14"
-sys-info = "0.9"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dev-dependencies]
-pretty_assertions = "0.7"
+[dependencies]
+reqwest = { version = "^0.11", features = ["blocking"] }
+rusqlite = "^0.29"
+csv = "^1.0"
+assert_cmd = "^2.0"
+predicates = "0.9"

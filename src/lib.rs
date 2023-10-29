@@ -1,18 +1,5 @@
-use std::fs;
-use reqwest::blocking::Client;
-use std::fs::OpenOptions;
-use std::io::Write;
 use rusqlite::{Connection, Result,params};
-
-pub fn log_query(query: &str, log_file: &str) {
-    if let Ok(mut file) = OpenOptions::new().append(true).create(true).open(log_file) {
-        if let Err(err) = writeln!(file, "```sql\n{}\n```\n", query) {
-            eprintln!("Error writing to log file: {:?}", err);
-        }
-    } else {
-        eprintln!("Error opening log file for writing.");
-    }
-}
+use csv::Reader;
 
 pub fn convert_csv_to_sql(dataset: &str) -> Result<String> {
     let conn = Connection::open("zg105.db")?;
@@ -22,33 +9,68 @@ pub fn convert_csv_to_sql(dataset: &str) -> Result<String> {
         "CREATE TABLE sample (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            Grade REAL
+            grade REAL
         )",
         [],
     )?;
 
     let mut rdr = Reader::from_path(dataset).expect("Failed to read dataset");
-    let mut stmt = conn.prepare(
-        "INSERT INTO iris (
-            sepal_length, 
-            sepal_width, 
-            petal_length, 
-            petal_width, 
-            species
+    let mut st = conn.prepare(
+        "INSERT INTO sample (
+            name,
+            grade
         ) 
-        VALUES (?, ?, ?, ?, ?)",
+        VALUES (?, ?)",
     )?;
 
     for result in rdr.records() {
         match result {
             Ok(record) => {
-                stmt.execute(&[&record[0], &record[1], &record[2], &record[3], &record[4]])?;
+                st.execute(&[&record[1], &record[2]])?;
             }
             Err(err) => {
-                eprintln!("Error reading CSV record: {:?}", err);
+                eprintln!("Error reading CSV: {:?}", err);
             }
         }
     }
 
-    Ok("IrisDataDB".to_string())
+    Ok("zg105".to_string())
+}
+
+pub fn query_crud(query: &str) -> Result<()> {
+    let conn = Connection::open("zg105.db")?;
+    // Read operation
+    if query.trim().to_lowercase().starts_with("select") {
+        let mut stmt = conn.prepare(query)?;
+
+        let results = stmt.query_map(params![], |row| {
+            Ok((
+                row.get::<usize, i64>(0)?, // Assuming an "id" column of type INTEGER
+                row.get::<usize, String>(1)?, 
+                row.get::<usize, f64>(2)?, 
+            ))
+        })?;
+
+        for result in results {
+            match result {
+                Ok((
+                    id,
+                    name,
+                    grade,
+                )) => {
+                    println!(
+                        "Result: id={}, name={}, grade={}",
+                        id,
+                        name,
+                        grade,
+                    );
+                }
+                Err(e) => eprintln!("Error in row: {:?}", e),
+            }
+        }
+    } else {
+        // other CUD operations
+        let _num_affected_rows = conn.execute_batch(query)?;
+    }
+    Ok(())
 }

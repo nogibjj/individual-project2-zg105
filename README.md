@@ -1,29 +1,41 @@
-# Week8-miniProj-zg105
+# Individual project 2 zg105
 
-This is a simple comparation between python script and Rust script:
-
-- read a csv
-- calculate median number
-- report the resources usage
+In this individual project we read from a csv file and convert it into a sqlite database, then we will do some CRUD operations on the database.
 
 ## Prerequisites
 
-- ruff==0.0.284
-- pandas
+- reqwest = { version = "^0.11", features = ["blocking"] }
+- rusqlite = "^0.29"
+- csv = "^1.0"
+- assert_cmd = "^2.0"
+- predicates = "0.9"
 
 ## Functions
 
-1. **main.py**: the python script to read data.csv, calculate median and report resources usage.
+1. **src/lib.rs**: the rust script to read data.csv, convert it into a database and query functions.
 
-2. **src/main.rs**: the rust script to read data.csv, calculate median and report resources usage.
+2. **src/main.rs**: the rust script to read command and do corresponding operations.
 
-3. **Cargo.toml**: Run with "cargo run" to start a new project with dependencies.
+3. **Cargo.toml**: Run with "cargo build" to start a new project with dependencies.
 
 ## Demo
-run "python3 main.py" to start
-![](pic1.png)
+run "cargo build" to start
+![](build.png)
 
-run "cargo run" to build a rust project and download dependencies.
+run "cargo convert" to read the data.csv and convert it into zg105.db
+![](convert.png)
 
-cd src and run "cargo run" to see
-![](pic2.png)
+# crud
+run "cargo run query [lines]" to do query
+
+read
+![](read.png)
+
+insert
+![](insert.png)
+
+delete
+![](delete.png)
+
+update
+![](update.png)
