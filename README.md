@@ -33,6 +33,9 @@ run "cargo run query [lines]" to do query
 # insert
 ![](insert.png)
 
+# Copilot
+In this project, GitHub Copilot was used in providing code suggestions, especially Rust. Additionally, Copilot was used to help compose terms for the code.
+
 # delete
 ![](delete.png)
 
