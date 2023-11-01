@@ -1,7 +1,7 @@
 # Individual project 2 zg105
 
 In this individual project we read from a csv file and convert it into a sqlite database, then we will do some CRUD operations on the database.
-video link here: 
+video link here: https://youtu.be/zBYQNMiWXW8
 ## Prerequisites
 
 - reqwest = { version = "^0.11", features = ["blocking"] }
